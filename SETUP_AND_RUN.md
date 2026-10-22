@@ -1,7 +1,8 @@
 # Agent 18 (Smart Firewall): setup and run guide
 
 Group 18: Soham Patil (24BCI0275), Jakeer Harsha (24BCE2668).
-Code: https://github.com/sohampatil99/smart-firewall-agent-group18
+Soham's repository: https://github.com/sohampatil99/smart-firewall-agent-group18
+Jakeer's repository: https://github.com/harshazakir/Operating-systems
 
 The agent changes real `iptables` rules, so everything below runs inside a Docker container. The container has its own
 network namespace, so a wrong rule cannot affect your computer, and every rule disappears when the container exits.

@@ -3,6 +3,9 @@
 Natural-language firewall requests -> validated `iptables` rules, through an MCP server, with guardrails.
 
 Group 18: Soham Patil (24BCI0275) and Jakeer Harsha (24BCE2668). Agentic Shell project, Agent 18 (Smart Firewall).
+- Soham's repository: https://github.com/sohampatil99/smart-firewall-agent-group18
+- Jakeer's repository: https://github.com/harshazakir/Operating-systems
+
 Review 1, 2 and 3 reports are combined in one document (see the course submission).
 
 Results in short (details in `results/` and Review 3, section 5.2): 60 automated tests pass; with fixed plans the pipeline scores
