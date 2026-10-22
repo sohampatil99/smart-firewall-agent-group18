@@ -9,6 +9,8 @@ Results in short (details in `results/` and Review 3, section 5.2): 60 automated
 9/9 intent accuracy, 8/8 safety, 12/12 error recovery and 6/6 rollback; the small live model we used
 (Qwen2.5-0.5B, not the Llama 3.1 8B named in the design) scores 2/9 intent accuracy. `screenshots/` holds real terminal captures.
 
+**Setup and run instructions: [SETUP_AND_RUN.md](SETUP_AND_RUN.md)** (Docker Desktop is the only requirement).
+
 | File | Role |
 | --- | --- |
 | `rules.py` | Pydantic schema, shell-free command building, `iptables -S` parser, table formatter |
