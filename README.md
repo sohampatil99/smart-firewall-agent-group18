@@ -6,7 +6,7 @@ Group 18: Soham Patil (24BCI0275) and Jakeer Harsha (24BCE2668). Agentic Shell p
 Review 1, 2 and 3 reports are combined in one document (see the course submission).
 
 Results in short (details in `results/` and Review 3, section 5.2): 60 automated tests pass; with fixed plans the pipeline scores
-9/9 intent accuracy, 8/8 safety, 12/12 error recovery and 6/6 rollback; the small live model that could be run in time
+9/9 intent accuracy, 8/8 safety, 12/12 error recovery and 6/6 rollback; the small live model we used
 (Qwen2.5-0.5B, not the Llama 3.1 8B named in the design) scores 2/9 intent accuracy. `screenshots/` holds real terminal captures.
 
 | File | Role |
