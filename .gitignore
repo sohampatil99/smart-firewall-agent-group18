@@ -1,0 +1,6 @@
+models/
+__pycache__/
+*.pyc
+.pytest_cache/
+results/*.err
+results/capture.log

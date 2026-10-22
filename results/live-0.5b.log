@@ -1,0 +1,25 @@
+  S1 run 1: pass=True mech=read only
+  S2 run 1: pass=False mech=no tool call
+  S3 run 1: pass=False mech=read only
+  S4 run 1: pass=False mech=changed rules
+  S5 run 1: pass=False mech=no tool call
+  C1 run 1: pass=False mech=blocked: would drop all traffic from everywhere
+ C2a run 1: pass=False mech=no tool call
+ C2b run 1: pass=False mech=no tool call
+  C3 run 1: pass=False mech=read only
+  C4 run 1: pass=False mech=blocked: would drop all traffic from everywhere | no tool call
+  M1 run 1: pass=True mech=no tool call
+  M2 run 1: pass=True mech=no tool call
+  M3 run 1: pass=True mech=no tool call
+  M4 run 1: pass=True mech=no tool call
+  M5 run 1: pass=True mech=no tool call
+  M6 run 1: pass=True mech=no tool call
+  M7 run 1: pass=True mech=no tool call
+  M8 run 1: pass=True mech=no tool call
+fault unknown tool name run 1: recovered=False retries=1
+fault port out of range run 1: recovered=False retries=1
+fault port with icmp run 1: recovered=False retries=1
+fault source not an IP run 1: recovered=False retries=1
+rollback fail_at=1: restored=True
+rollback fail_at=2: restored=True
+wrote /results/live-0.5b.json

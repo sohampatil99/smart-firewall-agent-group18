@@ -1,0 +1,7 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> Allow HTTPS from anywhere
+1 change(s) will be made:
+    iptables -I INPUT 1 -s 0.0.0.0/0 -p tcp --dport 443 -j ACCEPT
+Apply these changes? [y/N] n
+Cancelled; nothing changed.
+fw> /exit

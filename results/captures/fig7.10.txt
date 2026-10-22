@@ -1,0 +1,7 @@
+$ mcp server: firewall_server.py (stdio)   tools/list ->
+  get_firewall_status    [read-only  ] ()
+  list_firewall_rules    [read-only  ] (chain?: string)
+  lookup_service_port    [read-only  ] (name: string)
+  add_firewall_rule      [destructive] (protocol: string, source: string, action: string, port?: any, direction?: string, position?: integer, comment?: string)
+  delete_firewall_rule   [destructive] (chain: string, rule_number: integer)
+  undo_last_change       [destructive] ()

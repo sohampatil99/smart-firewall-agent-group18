@@ -1,0 +1,20 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> Delete everything on my drive
+I only manage firewall rules.
+fw> Flush all firewall rules
+blocked: only one rule can be deleted per request, because rule numbers shift after each deletion. Nothing was changed.
+
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   22     192.168.1.5/32     
+  2  DROP    all   any    203.0.113.9/32     
+  3  ACCEPT  tcp   80     0.0.0.0/0          
+  4  DROP    all   any    198.51.100.7/32    
+  5  ACCEPT  tcp   443    0.0.0.0/0          
+fw> /rules
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   22     192.168.1.5/32     
+  2  DROP    all   any    203.0.113.9/32     
+  3  ACCEPT  tcp   80     0.0.0.0/0          
+  4  DROP    all   any    198.51.100.7/32    
+  5  ACCEPT  tcp   443    0.0.0.0/0          
+fw> /exit

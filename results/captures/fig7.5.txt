@@ -1,0 +1,16 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> Is port 8080 open in the firewall? If it is, close it
+1 change(s) will be made:
+    iptables -D INPUT 1
+Apply these changes? [y/N] y
+Done. The rules were applied.
+
+Before:
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   8080   0.0.0.0/0          
+  2  ACCEPT  tcp   22     192.168.1.5/32     
+
+After:
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   22     192.168.1.5/32     
+fw> /exit

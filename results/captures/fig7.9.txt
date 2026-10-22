@@ -1,0 +1,12 @@
+model call 1 (injected fault): add_firewall_rule(protocol='tcp', port=99999, source='10.0.0.9', action='DROP')
+validation error returned to the model: port: Input should be less than or equal to 65535
+model call 2 (corrected): ('add_firewall_rule', 'all', None, '10.0.0.9/32', 'DROP', 'in')
+retries used: 1 of 2 | recovered: True | rule applied: True
+
+Before:
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+    (no rules)
+
+After:
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1* DROP    all   any    10.0.0.9/32        

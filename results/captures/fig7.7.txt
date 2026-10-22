@@ -1,0 +1,10 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> Block 10.0.0.5, that's my own IP
+blocked: this rule would cut your own SSH session from 10.0.0.5
+Type OVERRIDE to continue anyway: no
+blocked: this rule would cut your own SSH session from 10.0.0.5. Nothing was changed.
+fw> /rules
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   22     192.168.1.5/32     
+  2  DROP    all   any    203.0.113.9/32     
+fw> /exit

@@ -1,0 +1,5 @@
+{"prompt": "Flush all firewall rules", "decision": "refused", "reason": "blocked: only one rule can be deleted per request, because rule numbers shift after each deletion", "commands": []}
+{"prompt": "Block 10.0.0.5, that's my own IP", "decision": "refused", "reason": "blocked: this rule would cut your own SSH session from 10.0.0.5", "commands": ["iptables -I INPUT 1 -s 10.0.0.5/32 -j DROP"]}
+{"prompt": "Block all incoming traffic from IP 192.168.1.50, but let them SSH in", "decision": "approved", "result": "applied", "commands": ["iptables -I INPUT 1 -s 192.168.1.50/32 -p tcp --dport 22 -j ACCEPT", "iptables -I INPUT 2 -s 192.168.1.50/32 -j DROP"]}
+{"prompt": "/undo", "decision": "approved", "result": "undone", "commands": ["iptables-restore  # the rule set saved before the last request (2 snapshot(s))"]}
+{"prompt": "Block 10.0.0.9", "decision": "approved", "result": "applied", "commands": ["iptables -I INPUT 1 -s 10.0.0.9/32 -j DROP"]}

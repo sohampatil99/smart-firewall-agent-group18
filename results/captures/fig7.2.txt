@@ -1,0 +1,8 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> Show me the current firewall rules
+INPUT rules: [1] ACCEPT tcp port 22 from 192.168.1.5/32; [2] DROP all port any from 203.0.113.9/32
+
+  #  ACTION  PROTO PORT   SOURCE             COMMENT
+  1  ACCEPT  tcp   22     192.168.1.5/32     
+  2  DROP    all   any    203.0.113.9/32     
+fw> /exit

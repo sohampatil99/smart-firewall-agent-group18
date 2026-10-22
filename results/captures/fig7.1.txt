@@ -1,0 +1,17 @@
+Agent 18: Smart Firewall. Type /help or /exit.
+fw> /help
+Commands: /rules  /status  /undo  /help  /exit. Anything else is sent to the assistant.
+fw> /status
+{
+  "backend": "iptables v1.8.10 (nf_tables)",
+  "policies": {
+    "INPUT": "ACCEPT",
+    "FORWARD": "ACCEPT",
+    "OUTPUT": "ACCEPT"
+  },
+  "rules": {
+    "INPUT": 0,
+    "OUTPUT": 0
+  }
+}
+fw> /exit
