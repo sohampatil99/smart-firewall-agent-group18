@@ -166,6 +166,11 @@ def test_inline_json_calls_are_recovered():
     calls = parse_inline_calls('```json\n{"name": "list_firewall_rules", "parameters": {"chain": "INPUT"}}\n```')
     assert [(c.name, c.arguments) for c in calls] == [("list_firewall_rules", {"chain": "INPUT"})]
     assert parse_inline_calls("I can only manage firewall rules.") == []
+    # a call written after a sentence of prose is recovered too; JSON that is not a call is ignored
+    prose = 'Let me fix that.\n\n{"name": "delete_firewall_rule", "parameters": {"chain": "INPUT", "rule_number": 1}}'
+    assert [(c.name, c.arguments) for c in parse_inline_calls(prose)] == [("delete_firewall_rule", {"chain": "INPUT", "rule_number": 1})]
+    assert parse_inline_calls('The result is {"ok": true} and that is all.') == []
+    assert parse_inline_calls('Broken {"name": "x", "parameters": {') == []
 
 
 # -- rollback logic with a mocked command runner -------------------------------------------------

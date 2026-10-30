@@ -222,7 +222,7 @@ async def run_fault(name, bad, inner_factory, home):
     async with FirewallAgent(confirm=lambda *a: True, llm=Faulty(bad, inner_factory())) as agent:
         res = await agent.handle("Block 10.0.0.9")
     recovered = (not res.failed) and res.retries <= 2 and res.retries >= 1 and len(res.invalid) >= 1 and bool(chain()) \
-        and chain()[0][0] == "DROP" and chain()[0][3] == "10.0.0.9/32"
+        and chain()[0][0] == "DROP" and chain()[0][1] == "all" and chain()[0][2] is None and chain()[0][3] == "10.0.0.9/32"
     return {"fault": name, "retries": res.retries, "recovered": recovered, "failed": res.failed, "changed": res.changed,
             "final": chain()}
 

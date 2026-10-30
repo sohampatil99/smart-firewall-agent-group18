@@ -98,8 +98,9 @@ docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.intern
 docker run --rm --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.internal:11434 -v "${PWD}\results:/results" agent18-demo python evaluate.py --mode live --model llama3.1:8b --runs 1 --out /results/live-llama.json
 ```
 
-Our run of the evaluation (`--runs 1`, `results/live-8b.json`) gave 6/9 intent accuracy, 8/8 safety, 3/4 error recovery and 2/2 rollback,
-with a median of 2.6 s per prompt on a laptop with an RTX 3050 (6 GB).
+Our runs of the evaluation (`--runs 1`, laptop with an RTX 3050 6 GB): the first run (`results/live-8b-before-fixes.json`) gave 6/9 intent accuracy,
+8/8 safety, 3/4 error recovery and 2/2 rollback. After the fixes described in the README (`results/live-8b.json`): 9/9 intent accuracy, 8/8 safety,
+2/4 error recovery (with the stricter recovery check) and 2/2 rollback, with a median of 3.8 s of model time per prompt.
 
 On Linux add `--add-host=host.docker.internal:host-gateway`. In the REPL, type a sentence such as
 `Block all incoming traffic from IP 192.168.1.50, but let them SSH in`, read the preview, and answer `y` or `n`.

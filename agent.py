@@ -27,6 +27,10 @@ Rules:
 - Call lookup_service_port when the user names a service (ssh, http, https, ...) instead of a port number.
 - Before deleting a rule, or when asked whether a rule or port is open, call list_firewall_rules. Delete uses the rule number from that list.
 - When a request has an exception, emit the specific ACCEPT rule and the broad DROP rule as two add_firewall_rule calls.
+- Use protocol "all" with no port to block or allow everything from or to an address. Use "tcp" or "udp" only when the user names a protocol, a port or a service.
+- To close a port or remove a rule that already exists, delete it with delete_firewall_rule using the number from list_firewall_rules. Do not add a DROP rule on top of it.
+- Always make a call through the tool-call channel. Never describe a call or write it as JSON in your reply.
+- If a tool answers INVALID, call it again with only that problem fixed, using what the user asked for. Do not invent a port, protocol or address the user did not give.
 - If the source address or the port is unclear, ask the user a short question instead of guessing.
 - After the tool results arrive, answer in one or two short sentences.
 Example: "Stop 10.0.0.7 reaching my web server" -> add_firewall_rule(protocol="tcp", port=80, source="10.0.0.7", action="DROP", direction="in")"""
@@ -56,22 +60,37 @@ class LLMReply:
         return msg
 
 
+def _as_call(item) -> ToolCall | None:
+    if isinstance(item, dict) and "name" in item and isinstance(item.get("parameters", item.get("arguments", {})), dict):
+        return ToolCall(str(item["name"]), item.get("parameters", item.get("arguments", {})))
+    return None
+
+
 def parse_inline_calls(content: str) -> list[ToolCall]:
-    """JSON enforcement: some models print the call as text instead of using the tool-call channel."""
+    """JSON enforcement: some models print the call as text instead of using the tool-call channel.
+
+    The call can be the whole message (optionally fenced) or a JSON object after a sentence of prose such as
+    "Let me fix that." Recovered calls still go through the same validation, guardrails and confirmation."""
     text = content.strip()
     text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text)
     try:
         data = json.loads(text)
     except ValueError:
-        return []
-    items = data if isinstance(data, list) else [data]
-    calls = []
-    for item in items:
-        if isinstance(item, dict) and "name" in item and isinstance(item.get("parameters", item.get("arguments", {})), dict):
-            calls.append(ToolCall(str(item["name"]), item.get("parameters", item.get("arguments", {}))))
-        else:
-            return []
-    return calls
+        data = None
+    else:
+        items = data if isinstance(data, list) else [data]
+        calls = [_as_call(item) for item in items]
+        return [] if None in calls else calls
+    decoder, calls, pos = json.JSONDecoder(), [], 0
+    while (start := text.find("{", pos)) != -1:
+        try:
+            obj, pos = decoder.raw_decode(text, start)
+        except ValueError:
+            pos = start + 1
+            continue
+        if (call := _as_call(obj)) is not None:
+            calls.append(call)
+    return calls[:4]
 
 
 class OllamaLLM:
@@ -275,8 +294,16 @@ class FirewallAgent:
                     raise ValueError("name must be a service name such as ssh or https")
                 return Valid(call.name, name, (call.name,))
         except ValidationError as err:
-            raise ValueError(_short(err))
+            raise ValueError(_short(err) + self._usage(call.name, args))
         return Valid(call.name, None, (call.name,))
+
+    def _usage(self, name: str, args: dict) -> str:
+        """Tell the model the tool's real parameter names, and which of the arguments it sent do not exist."""
+        props = [p for p in self.tools[name].inputSchema.get("properties", {}) if not (name == "add_firewall_rule" and p == "position")]
+        required = set(self.tools[name].inputSchema.get("required", []))
+        hint = f". {name} takes ({', '.join(p if p in required else p + '?' for p in props)}); ? marks optional"
+        unknown = sorted(set(args) - set(props) - {"position"})
+        return hint + (f". Unknown argument(s) you sent: {', '.join(unknown)}" if unknown else "")
 
     # -- the request loop ------------------------------------------------------------------------
     async def handle(self, prompt: str) -> Result:
@@ -310,7 +337,7 @@ class FirewallAgent:
                     res.invalid.append({"turn": turn + 1, "errors": list(errors.values()),
                                         "calls": [(c.name, c.arguments) for c in reply.tool_calls]})
                     for i, call in enumerate(reply.tool_calls):
-                        text = (f"INVALID: {errors[i]}. Fix it and call the tool again." if i in errors
+                        text = (f"INVALID: {errors[i]}. Fix only that problem, using what the user asked for, and call the tool again." if i in errors
                                 else "Not run, because another call in this turn was invalid. Send all calls again.")
                         messages.append({"role": "tool", "content": text, "tool_name": call.name})
                     if res.retries > self.max_retries:

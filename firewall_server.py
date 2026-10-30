@@ -38,8 +38,10 @@ def lookup_service_port(name: str) -> str:
 @mcp.tool(annotations=WRITE)
 def add_firewall_rule(protocol: str, source: str, action: str, port: int | None = None,
                       direction: str = "in", position: int = 1, comment: str = "") -> str:
-    """Insert one ACCEPT, DROP or REJECT rule. protocol is tcp, udp, icmp or all; source is an IPv4 address
-    or network (use 0.0.0.0/0 for anywhere); direction is 'in' or 'out'. Called only after the guardrails approve it."""
+    """Insert one ACCEPT, DROP or REJECT rule. protocol is tcp, udp, icmp or all; use all, with no port, to cover every
+    protocol from an address. port is optional: leave it out unless the user gave a port or a service, and only with tcp
+    or udp. source is an IPv4 address or network (use 0.0.0.0/0 for anywhere); direction is 'in' or 'out'.
+    Called only after the guardrails approve it."""
     rule = RuleRequest(protocol=protocol, port=port, source=source, action=action,
                        direction=direction, comment=comment)
     return json.dumps(backend.add(rule, position))
@@ -47,7 +49,7 @@ def add_firewall_rule(protocol: str, source: str, action: str, port: int | None 
 
 @mcp.tool(annotations=WRITE)
 def delete_firewall_rule(chain: str, rule_number: int) -> str:
-    """Delete one rule from INPUT or OUTPUT by its rule number from list_firewall_rules."""
+    """Delete one rule from INPUT or OUTPUT by its rule number from list_firewall_rules (arguments: chain, rule_number)."""
     return json.dumps(backend.delete(DeleteRequest(chain=chain, rule_number=rule_number)))
 
 
