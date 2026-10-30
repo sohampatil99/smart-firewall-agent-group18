@@ -41,7 +41,7 @@ Interactive REPL: `docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http:/
 
 ## Note on the submitted report, and what changed after the first 8B run
 
-**Mismatch with the report.** The Llama 3.1 8B runs were made on 30 October 2026, after the report was submitted. At submission this README
+**Mismatch with the report.** The Llama 3.1 8B runs were made after the report was submitted. At submission this README
 gave the 0.5B model's 2/9 as the live-model result, and the design model had not been run, so the 8B figures here, in `SETUP_AND_RUN.md` and
 in `results/` go beyond what the submitted PDF contains. The code also changed after submission (listed below), so `agent.py`,
 `firewall_server.py`, `evaluate.py` and `tests/test_unit.py` are newer than the code the report describes. The report was not changed. Its
