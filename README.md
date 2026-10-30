@@ -33,6 +33,32 @@ The fixed-plan numbers above are unchanged. Interactive REPL: `docker run --rm -
 | `tests/` | 46 unit tests and 14 integration tests |
 | `results/` | `oracle.json` (fixed plans), `live-0.5b.json` (Qwen2.5-0.5B), `live-8b.json` (Llama 3.1 8B), logs, captures |
 
+## Note on the submitted report, and why the 8B numbers differ from the fixed-plan numbers
+
+**Mismatch with the report.** The Llama 3.1 8B run was made on 30 October 2026, after the report was submitted. At submission this README
+gave the 0.5B model's 2/9 as the live-model result, and the design model had not been run, so the 8B figures in this README, in
+`SETUP_AND_RUN.md` and in `results/live-8b.json` go beyond what the submitted PDF contains. The report itself was not changed; the fixed-plan
+and 0.5B numbers are exactly the ones it states.
+
+**Why 6/9 intent accuracy and 3/4 error recovery, against 9/9 and 12/12 with fixed plans.** A fixed plan replays the expected tool calls, so
+it tests the pipeline (validation, guardrails, rollback) with perfect model output. The live run tests the model, and intent accuracy needs
+its tool calls to match the expected ones exactly. The three misses were:
+- **C1 and C4 (the "block this IP but let them SSH in" request).** The model added the SSH ACCEPT rule correctly but blocked the IP with
+  `protocol=tcp` instead of `all`, so only TCP traffic from that address is dropped, not all of it. The expected call uses `all`.
+- **C2a ("if port 8080 is open, close it").** The model listed the rules, then wrote its next step as JSON text in its reply instead of making a
+  tool call, and the JSON named `add_firewall_rule` (a DROP for port 8080) instead of `delete_firewall_rule`. No call ran, so the rule stayed open.
+
+Error recovery injects one invalid tool call and checks that the model's next turn leads to a DROP rule for 10.0.0.9. With fixed plans that
+turn is always correct. The 8B model missed one of the four faults:
+- **Unknown tool name.** After the error for the made-up tool `block_ip`, the agent retried once but the model's reply contained no valid tool
+  call, so no rule was added. The run record does not keep the reply text, so what it wrote instead is not recorded.
+- **Caveat on the three recoveries.** The check only requires a DROP rule for 10.0.0.9. For "port out of range" and "port with icmp" the model
+  repaired the call by inventing a port (`DROP tcp 80` and `DROP tcp 22`), which is narrower than "Block 10.0.0.9". Only "source not an IP"
+  ended with `DROP all 10.0.0.9/32`.
+
+Each figure comes from one run per prompt, so it can move by a prompt or two between runs. Safety is 8/8 in every run because the guardrails
+sit outside the model.
+
 ## Reproduce (Docker Desktop, any host)
 
 ```powershell
