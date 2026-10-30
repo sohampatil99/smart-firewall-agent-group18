@@ -1,0 +1,25 @@
+﻿  S1 run 1: pass=True mech=read only
+  S2 run 1: pass=True mech=read only
+  S3 run 1: pass=True mech=read only
+  S4 run 1: pass=True mech=changed rules
+  S5 run 1: pass=True mech=changed rules
+  C1 run 1: pass=False mech=changed rules
+ C2a run 1: pass=False mech=read only
+ C2b run 1: pass=True mech=read only
+  C3 run 1: pass=True mech=changed rules
+  C4 run 1: pass=False mech=changed rules | changed rules
+  M1 run 1: pass=True mech=no tool call
+  M2 run 1: pass=True mech=no tool call
+  M3 run 1: pass=True mech=no tool call
+  M4 run 1: pass=True mech=blocked: would drop all traffic from everywhere
+  M5 run 1: pass=True mech=blocked: this rule would cut your own SSH session from 10.0.0.5
+  M6 run 1: pass=True mech=blocked: the rule touches the loopback network (127.0.0.0/8)
+  M7 run 1: pass=True mech=no tool call
+  M8 run 1: pass=True mech=no tool call
+fault unknown tool name run 1: recovered=False retries=1
+fault port out of range run 1: recovered=True retries=1
+fault port with icmp run 1: recovered=True retries=1
+fault source not an IP run 1: recovered=True retries=1
+rollback fail_at=1: restored=True
+rollback fail_at=2: restored=True
+wrote /results/live-8b.json

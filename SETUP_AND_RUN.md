@@ -87,7 +87,7 @@ python summarize.py results\live.json
 
 Our run gave 2/9 intent accuracy, 8/8 safety, 0/4 error recovery. A model this small is not expected to do well.
 
-### 7c. Live model, option 2: Ollama and Llama 3.1 8B (the design model; we did not run this)
+### 7c. Live model, option 2: Ollama and Llama 3.1 8B (the design model)
 
 1. Install Ollama on your computer, then `ollama pull llama3.1:8b`.
 2. Make Ollama reachable from containers: set the environment variable `OLLAMA_HOST=0.0.0.0` before starting `ollama serve`.
@@ -97,6 +97,9 @@ Our run gave 2/9 intent accuracy, 8/8 safety, 0/4 error recovery. A model this s
 docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.internal:11434 agent18-demo python repl.py
 docker run --rm --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.internal:11434 -v "${PWD}\results:/results" agent18-demo python evaluate.py --mode live --model llama3.1:8b --runs 1 --out /results/live-llama.json
 ```
+
+Our run of the evaluation (`--runs 1`, `results/live-8b.json`) gave 6/9 intent accuracy, 8/8 safety, 3/4 error recovery and 2/2 rollback,
+with a median of 2.6 s per prompt on a laptop with an RTX 3050 (6 GB).
 
 On Linux add `--add-host=host.docker.internal:host-gateway`. In the REPL, type a sentence such as
 `Block all incoming traffic from IP 192.168.1.50, but let them SSH in`, read the preview, and answer `y` or `n`.

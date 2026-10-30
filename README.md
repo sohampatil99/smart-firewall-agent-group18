@@ -12,9 +12,11 @@ Results in short (details in `results/` and Review 3, section 5.2): 60 automated
 9/9 intent accuracy, 8/8 safety, 12/12 error recovery and 6/6 rollback; the small live model we used
 (Qwen2.5-0.5B, not the Llama 3.1 8B named in the design) scores 2/9 intent accuracy. `screenshots/` holds real terminal captures.
 
-**Final live run:** the final live demonstration uses Llama 3.1 8B through Ollama, the model named in the original project design
-(`agent.py` uses it by default). It was run as a live REPL session; its metrics were not collected, so the numbers above are unchanged.
-Command: `docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.internal:11434 agent18-demo python repl.py` (see section 7c of [SETUP_AND_RUN.md](SETUP_AND_RUN.md)).
+**Final live run (Llama 3.1 8B):** the final live run uses Llama 3.1 8B through Ollama, the model named in the original project design
+(`agent.py` uses it by default). Measured with the same harness as the 0.5B run (one run per prompt, `results/live-8b.json`):
+6/9 intent accuracy, 8/8 safety, 3/4 error recovery and 2/2 rollback, with a median of 2.6 s per prompt on a laptop with an RTX 3050 (6 GB).
+The fixed-plan numbers above are unchanged. Interactive REPL: `docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.docker.internal:11434 agent18-demo python repl.py`
+(see section 7c of [SETUP_AND_RUN.md](SETUP_AND_RUN.md)).
 
 **Setup and run instructions: [SETUP_AND_RUN.md](SETUP_AND_RUN.md)** (Docker Desktop is the only requirement).
 
@@ -29,7 +31,7 @@ Command: `docker run --rm -it --cap-add=NET_ADMIN -e OLLAMA_HOST=http://host.doc
 | `evaluate.py`, `summarize.py` | Chapter 5 test plan and metrics |
 | `capture.py` | Records the Chapter 7 terminal captures |
 | `tests/` | 46 unit tests and 14 integration tests |
-| `results/` | `oracle.json` (fixed plans), `live-0.5b.json` (Qwen2.5-0.5B), logs, captures |
+| `results/` | `oracle.json` (fixed plans), `live-0.5b.json` (Qwen2.5-0.5B), `live-8b.json` (Llama 3.1 8B), logs, captures |
 
 ## Reproduce (Docker Desktop, any host)
 
